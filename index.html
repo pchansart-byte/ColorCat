@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ColorCat · estudio de color</title>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e1116">
+<meta name="description" content="ColorCat: estudio de color en el navegador. Espectro extrae paletas de una imagen; Gamma crea paletas con la rueda de color.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ColorCat · estudio de color">
+<meta property="og:description" content="Espectro extrae paletas de una imagen y Gamma las crea con la rueda de color. Todo ocurre en tu navegador.">
+<meta property="og:image" content="captura-inicio.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='11' fill='%2312151b'/%3E%3Cg fill='%23efe9de'%3E%3Cellipse cx='11.5' cy='19' rx='4.4' ry='5.3' transform='rotate(-20 11.5 19)'/%3E%3Cellipse cx='19.5' cy='12.5' rx='4.2' ry='5.4' transform='rotate(-7 19.5 12.5)'/%3E%3Cellipse cx='28.5' cy='12.5' rx='4.2' ry='5.4' transform='rotate(7 28.5 12.5)'/%3E%3Cellipse cx='36.5' cy='19' rx='4.4' ry='5.3' transform='rotate(20 36.5 19)'/%3E%3Cpath d='M24 22c6.3 0 11.5 4.2 11.5 9.7 0 3.9-3.2 6.1-7.5 6.1-1.6 0-2.8-.5-4-.5s-2.4.5-4 .5c-4.3 0-7.5-2.2-7.5-6.1C12.5 26.2 17.7 22 24 22z'/%3E%3C/g%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M11.3 10.9l1.8 4.5-3.6 0z'/%3E%3Cpath d='M19.3 4.3l1.8 4.5-3.6 0z'/%3E%3Cpath d='M28.7 4.3l1.8 4.5-3.6 0z'/%3E%3Cpath d='M36.7 10.9l1.8 4.5-3.6 0z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+
+<div class="app" id="app" data-view="home">
+
+  <header class="topbar">
+    <div class="top-left">
+      <button class="brand" id="btnBrand" type="button" title="ColorCat">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <g class="paw-pads">
+          <ellipse cx="11.5" cy="19" rx="4.4" ry="5.3" transform="rotate(-20 11.5 19)"/>
+          <ellipse cx="19.5" cy="12.5" rx="4.2" ry="5.4" transform="rotate(-7 19.5 12.5)"/>
+          <ellipse cx="28.5" cy="12.5" rx="4.2" ry="5.4" transform="rotate(7 28.5 12.5)"/>
+          <ellipse cx="36.5" cy="19" rx="4.4" ry="5.3" transform="rotate(20 36.5 19)"/>
+          <path d="M24 22c6.3 0 11.5 4.2 11.5 9.7 0 3.9-3.2 6.1-7.5 6.1-1.6 0-2.8-.5-4-.5s-2.4.5-4 .5c-4.3 0-7.5-2.2-7.5-6.1C12.5 26.2 17.7 22 24 22z"/>
+        </g>
+        <g class="paw-claws">
+          <path d="M11.3 10.9l1.8 4.5-3.6 0z"/>
+          <path d="M19.3 4.3l1.8 4.5-3.6 0z"/>
+          <path d="M28.7 4.3l1.8 4.5-3.6 0z"/>
+          <path d="M36.7 10.9l1.8 4.5-3.6 0z"/>
+        </g>
+      </svg>
+      <span class="brand-text">
+        <strong>ColorCat</strong>
+        <span data-i18n="brand.sub">estudio de color</span>
+      </span>
+    </button>
+
+      <button class="btn btn-ghost btn-menu" id="btnMenu" data-i18n-title="btn.menuTitle">
+        <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg>
+        <span data-i18n="btn.menu">Menú</span>
+      </button>
+    </div>
+
+    <div class="top-actions">
+      <div class="action-group" id="actionsEspectro">
+        <button class="btn btn-ghost" id="btnOpen" data-i18n-title="btn.openTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h3l1.6 2H18a2.5 2.5 0 0 1 2.5 2.5v7A2.5 2.5 0 0 1 18 19H6.5A2.5 2.5 0 0 1 4 16.5z"/><path d="M12 10.5v5M9.5 13h5"/></svg>
+          <span data-i18n="btn.open">Abrir imagen</span>
+        </button>
+        <button class="btn btn-ghost" id="btnDemo" data-i18n-title="btn.demoTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 3.5l2 5 5 .5-3.8 3.3 1.1 5-4.3-2.6-4.3 2.6 1.1-5L5 9l5-.5z"/></svg>
+          <span data-i18n="btn.demo">Ejemplo</span>
+        </button>
+        <span class="top-sep"></span>
+        <button class="btn btn-blue" id="btnCutout" disabled data-i18n-title="btn.cutoutTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5" stroke-dasharray="3 2.4"/><path d="M12 8.5v7m0 0l-2.7-2.7M12 15.5l2.7-2.7"/></svg>
+          <span data-i18n="btn.cutout">Recorte PNG</span>
+        </button>
+        <button class="btn btn-primary" id="btnExport" disabled data-i18n-title="btn.exportTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5"/><path d="M5 16.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.5"/></svg>
+          <span data-i18n="btn.export">Hoja de estilos</span>
+        </button>
+      </div>
+
+      <div class="action-group" id="actionsGamma" hidden>
+        <button class="btn btn-ghost" id="gRandom" data-i18n-title="g.randomTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M4 7h3.2c1.5 0 2.4.8 3.2 2l3.2 6c.8 1.2 1.7 2 3.2 2H20"/><path d="M17.2 14.2L20 17l-2.8 2.8"/><path d="M4 17h3.2c1.5 0 2.4-.8 3.2-2"/><path d="M13.6 9c.8-1.2 1.7-2 3.2-2H20"/><path d="M17.2 4.2L20 7l-2.8 2.8"/></svg>
+          <span data-i18n="g.random">Aleatoria</span>
+        </button>
+        <span class="top-sep"></span>
+        <button class="btn btn-blue" id="gExportTop" data-i18n-title="g.exportTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5"/><path d="M5 16.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.5"/></svg>
+          <span data-i18n="g.export">Exportar</span>
+        </button>
+      </div>
+
+      <div class="action-group">
+        <label class="lang" title="Idioma / Language">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.4 2.4 3.6 5.3 3.6 8.5S14.4 18.1 12 20.5c-2.4-2.4-3.6-5.3-3.6-8.5S9.6 5.9 12 3.5z"/></svg>
+          <select id="langSelect" aria-label="Idioma / Language">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <button class="btn btn-ghost btn-icon" id="btnHelp" data-i18n-title="btn.helpTitle" data-i18n-aria="btn.helpTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2 1-1.2 1.8"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MENÚ PRINCIPAL
+       ============================================================ -->
+  <main class="view home" id="viewHome">
+    <div class="home-inner">
+      <div class="home-hero">
+        <svg class="home-paw" viewBox="0 0 48 48" aria-hidden="true">
+          <g class="paw-pads">
+            <ellipse cx="11.5" cy="19" rx="4.4" ry="5.3" transform="rotate(-20 11.5 19)"/>
+            <ellipse cx="19.5" cy="12.5" rx="4.2" ry="5.4" transform="rotate(-7 19.5 12.5)"/>
+            <ellipse cx="28.5" cy="12.5" rx="4.2" ry="5.4" transform="rotate(7 28.5 12.5)"/>
+            <ellipse cx="36.5" cy="19" rx="4.4" ry="5.3" transform="rotate(20 36.5 19)"/>
+            <path d="M24 22c6.3 0 11.5 4.2 11.5 9.7 0 3.9-3.2 6.1-7.5 6.1-1.6 0-2.8-.5-4-.5s-2.4.5-4 .5c-4.3 0-7.5-2.2-7.5-6.1C12.5 26.2 17.7 22 24 22z"/>
+          </g>
+          <g class="paw-claws">
+            <path d="M11.3 10.9l1.8 4.5-3.6 0z"/>
+            <path d="M19.3 4.3l1.8 4.5-3.6 0z"/>
+            <path d="M28.7 4.3l1.8 4.5-3.6 0z"/>
+            <path d="M36.7 10.9l1.8 4.5-3.6 0z"/>
+          </g>
+        </svg>
+        <h1>ColorCat</h1>
+      </div>
+
+      <div class="cards" id="homeCards">
+        <button class="card" data-go="espectro">
+          <span class="card-top">
+            <span class="card-icon card-icon-spectrum">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5.5-5.5 4 4L16 10l5 5"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </span>
+            <span class="card-tag" data-i18n="menu.available">Disponible</span>
+          </span>
+          <strong class="card-title" data-i18n="menu.espectro">Espectro</strong>
+          <span class="card-desc" data-i18n="menu.espectroDesc">Extrae la paleta de una imagen: selecciona el área, ajusta los colores y genera una hoja de estilos con todos los códigos.</span>
+          <span class="card-cta"><span data-i18n="menu.open">Abrir</span> <span aria-hidden="true">→</span></span>
+        </button>
+
+        <button class="card" data-go="gamma">
+          <span class="card-top">
+            <span class="card-icon card-icon-gamma">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.4"/><path d="M12 3.5v6M12 14.5v6M3.5 12h6M14.5 12h6"/></svg>
+            </span>
+            <span class="card-tag" data-i18n="menu.available">Disponible</span>
+          </span>
+          <strong class="card-title" data-i18n="menu.gamma">Gamma</strong>
+          <span class="card-desc" data-i18n="menu.gammaDesc">Crea paletas desde cero con la rueda de color: armonías, brillo y saturación, códigos en todos los formatos y comprobación de accesibilidad.</span>
+          <span class="card-cta"><span data-i18n="menu.open">Abrir</span> <span aria-hidden="true">→</span></span>
+        </button>
+
+        <div class="card card-soon" aria-disabled="true">
+          <span class="card-top">
+            <span class="card-icon card-icon-soon">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+            <span class="card-tag" data-i18n="menu.soon">Próximamente</span>
+          </span>
+          <strong class="card-title" data-i18n="menu.next">Nueva herramienta</strong>
+          <span class="card-desc" data-i18n="menu.nextDesc">Este espacio está reservado para la próxima utilidad de color.</span>
+          <span class="card-cta card-cta-soon" data-i18n="menu.soonCta">En camino</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============================================================
+       ESPECTRO
+       ============================================================ -->
+  <main class="view layout" id="viewEspectro" hidden>
+
+    <!-- ================= COLUMNA IZQUIERDA ================= -->
+    <aside class="panel panel-left" id="panelLeft">
+
+      <section class="block block-file">
+        <div class="file-card" id="fileCard" data-i18n-title="file.openTitle">
+          <div class="file-thumb" id="fileThumb"></div>
+          <div class="file-meta">
+            <span class="file-name" id="fileName" data-i18n="file.none">Sin imagen</span>
+            <span class="file-size" id="fileDims">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="tools.title">Herramientas</h2>
+        <div class="tool-list" id="toolList">
+          <button class="tool" data-tool="rect" data-i18n-title="tool.rectTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><rect x="4" y="5.5" width="16" height="13" rx="1.5" stroke-dasharray="3 2.4"/></svg>
+            <span data-i18n="tool.rect">Rectángulo</span><kbd>R</kbd>
+          </button>
+          <button class="tool" data-tool="lasso" data-i18n-title="tool.lassoTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M7.5 10.5c0-3 2.2-5 5-5s4.6 2 4.6 4.5c0 3.2-3.2 4.6-6 5.6-1.6.6-2.4 1.4-2.4 2.6 0 1.2 1 2.2 2.4 2.2 1.5 0 2.3-.9 2.3-2" stroke-dasharray="3 2.4"/><circle cx="13.2" cy="19.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+            <span data-i18n="tool.lasso">Lazo libre</span><kbd>L</kbd>
+          </button>
+          <button class="tool" data-tool="wand" data-i18n-title="tool.wandTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M14.8 4.6l4.6 4.6-9.6 9.6-4.6-4.6z"/><path d="M5.2 14.2l4.6 4.6"/><path d="M17.5 3.2v3M16 4.7h3"/><path d="M20.2 8.2v2.2M19.1 9.3h2.2"/></svg>
+            <span data-i18n="tool.wand">Varita mágica</span><kbd>W</kbd>
+          </button>
+          <button class="tool" data-tool="brush" data-i18n-title="tool.brushTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M15.5 4.8l3.7 3.7-8.4 8.4-3.7-3.7z"/><path d="M6.4 13.9l3.7 3.7-1.2 2.6-2.7.5-2.5 2.5"/><path d="M6.4 13.9c1.5-1.5 3.4-1.6 4.6-.4"/></svg>
+            <span data-i18n="tool.brush">Pincel</span><kbd>B</kbd>
+          </button>
+          <button class="tool" data-tool="eraser" data-i18n-title="tool.eraserTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M9.2 19.5h10.3"/><path d="M5.6 14.2l6.4-6.4a1.6 1.6 0 0 1 2.3 0l3.9 3.9a1.6 1.6 0 0 1 0 2.3l-4.4 4.4H9.9l-4.3-4.2z"/><path d="M9.6 10.2l6.2 6.2"/></svg>
+            <span data-i18n="tool.eraser">Borrador</span><kbd>E</kbd>
+          </button>
+          <button class="tool" data-tool="picker" data-i18n-title="tool.pickerTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M14.5 5.4l4.1 4.1"/><path d="M16.6 3.3a2.3 2.3 0 0 1 3.2 0l.9.9a2.3 2.3 0 0 1 0 3.2l-2 2-4.1-4.1z"/><path d="M14.6 5.3l-8 8-.6 3.4 3.4-.6 8-8"/></svg>
+            <span data-i18n="tool.picker">Cuentagotas</span><kbd>I</kbd>
+          </button>
+        </div>
+
+        <div class="field" id="brushField" style="display:none">
+          <div class="field-head">
+            <label for="brushSize" data-i18n="brush.label">Grosor del pincel</label>
+            <span class="mono" id="brushSizeVal">46 px</span>
+          </div>
+          <input type="range" id="brushSize" min="4" max="180" step="1" value="46">
+          <p class="hint" data-i18n="brush.hint">Con lápiz o tableta el grosor responde a la presión.</p>
+        </div>
+
+        <div class="field" id="wandField" style="display:none">
+          <div class="field-head">
+            <label for="wandTol" data-i18n="wand.tolerance">Tolerancia</label>
+            <span class="mono" id="wandTolVal">20</span>
+          </div>
+          <input type="range" id="wandTol" min="1" max="100" step="1" value="20">
+          <label class="check check-inline">
+            <input type="checkbox" id="wandContig" checked>
+            <span data-i18n="wand.contiguous">Contiguo</span>
+          </label>
+          <p class="hint" data-i18n="wand.hint">Haz clic en la imagen para seleccionar por color. Ajusta la tolerancia para abarcar más o menos tonos.</p>
+        </div>
+
+        <div class="field" id="modeField">
+          <div class="field-head"><span data-i18n="mode.label">Modo de selección</span></div>
+          <div class="seg" id="modeGroup" role="group" aria-label="Modo de selección">
+            <button data-mode="add" class="is-active" data-i18n="mode.add">Sumar</button>
+            <button data-mode="sub" data-i18n="mode.sub">Restar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="sel.title">Selección</h2>
+        <div class="btn-row">
+          <button class="btn btn-soft" id="btnUndo" disabled data-i18n-title="sel.undoTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M9 8H5V4"/><path d="M5.5 8.4A7.5 7.5 0 1 1 4.8 14"/></svg>
+            <span data-i18n="sel.undo">Deshacer</span>
+          </button>
+          <button class="btn btn-soft" id="btnRedo" disabled data-i18n-title="sel.redoTitle">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M15 8h4V4"/><path d="M18.5 8.4A7.5 7.5 0 1 0 19.2 14"/></svg>
+            <span data-i18n="sel.redo">Rehacer</span>
+          </button>
+        </div>
+        <div class="btn-row btn-row-3">
+          <button class="btn btn-soft" id="btnInvert" data-i18n-title="sel.invertTitle" data-i18n="sel.invert">Invertir</button>
+          <button class="btn btn-soft" id="btnAll" data-i18n-title="sel.allTitle" data-i18n="sel.all">Todo</button>
+          <button class="btn btn-soft" id="btnClear" data-i18n-title="sel.clearTitle" data-i18n="sel.clear">Limpiar</button>
+        </div>
+        <p class="hint" data-i18n="sel.hint">Alt al arrastrar resta. Espacio + arrastrar mueve. Rueda = zoom.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="ext.title">Extracción</h2>
+
+        <div class="field">
+          <div class="field-head">
+            <label data-i18n="ext.colors">Nº de colores</label>
+            <div class="stepper">
+              <button id="kDown" aria-label="−">−</button>
+              <span class="mono" id="kVal">6</span>
+              <button id="kUp" aria-label="+">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-head"><label for="sortSelect" data-i18n="ext.sort">Ordenar por</label></div>
+          <select id="sortSelect" class="select">
+            <option value="coverage" data-i18n="sort.coverage">Cobertura</option>
+            <option value="hue" data-i18n="sort.hue">Tono</option>
+            <option value="light" data-i18n="sort.light">Luminosidad</option>
+            <option value="sat" data-i18n="sort.sat">Saturación</option>
+          </select>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="chkAuto" checked>
+          <span data-i18n="ext.auto">Extraer al soltar la selección</span>
+        </label>
+
+        <button class="btn btn-accent btn-block" id="btnExtract" disabled data-i18n-title="ext.buttonTitle">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 4.5a8 8 0 1 0 0 15c1.2 0 1.7-.9 1.7-1.8 0-1.5 1-2.2 2.3-2.2H17a3.5 3.5 0 0 0 3.5-3.5c0-4.1-3.8-7.5-8.5-7.5z"/><circle cx="8.3" cy="10.2" r="1.1" fill="currentColor" stroke="none"/><circle cx="12.4" cy="7.9" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="10.9" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="ext.button">Extraer paleta</span>
+        </button>
+      </section>
+
+      <section class="block block-samples">
+        <h2 class="block-title" data-i18n="samples.title">Muestras manuales</h2>
+        <div class="samples" id="samplesList"></div>
+        <p class="hint" id="samplesHint" data-i18n="samples.hint">Usa el cuentagotas (I) y haz clic en la imagen. Clic en una muestra para copiar su código.</p>
+      </section>
+
+    </aside>
+
+    <!-- ================= LIENZO ================= -->
+    <section class="stage">
+      <div class="canvas-wrap" id="canvasWrap">
+        <div class="stage-bg" aria-hidden="true"></div>
+        <canvas id="view" aria-label="Área de trabajo de la imagen"></canvas>
+        <canvas id="ants" class="ants-canvas" aria-hidden="true"></canvas>
+
+        <div class="empty" id="emptyState">
+          <div class="empty-box" id="dropZone">
+            <svg viewBox="0 0 64 64" class="empty-icon" aria-hidden="true">
+              <rect x="8" y="14" width="48" height="38" rx="5"/>
+              <circle cx="23" cy="27" r="4.5"/>
+              <path d="M12 46l13-13 9 9 7-6 11 10"/>
+            </svg>
+            <h3 data-i18n="empty.title">Arrastra una imagen aquí</h3>
+            <p data-i18n-html="empty.sub">o pégala con <kbd>Ctrl</kbd>+<kbd>V</kbd> · JPG, PNG, WEBP, GIF, AVIF</p>
+            <button class="btn btn-primary" id="btnEmptyPick" data-i18n="empty.pick">Elegir archivo</button>
+            <p class="empty-foot" data-i18n="empty.foot">Todo el procesado ocurre en tu equipo. Nada se sube a internet.</p>
+          </div>
+        </div>
+
+        <div class="hud hud-left">
+          <div class="hud-group">
+            <button id="zoomOut" data-i18n-title="zoom.out" data-i18n-aria="zoom.out">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M6 12h12"/></svg>
+            </button>
+            <button id="zoomLevel" class="mono" data-i18n-title="zoom.fitTitle">100%</button>
+            <button id="zoomIn" data-i18n-title="zoom.in" data-i18n-aria="zoom.in">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg>
+            </button>
+            <span class="hud-sep"></span>
+            <button id="zoomFit" data-i18n-title="zoom.fitTitle" data-i18n="zoom.fit">Ajustar</button>
+            <button id="zoomOne" data-i18n-title="zoom.oneTitle" data-i18n="zoom.one">1:1</button>
+          </div>
+        </div>
+
+        <div class="hud hud-right">
+          <span id="selStats" class="mono" data-i18n="stats.none">Sin selección</span>
+        </div>
+
+        <div class="busy" id="busy"><span class="spinner"></span><span data-i18n="busy.palette">Calculando paleta…</span></div>
+      </div>
+    </section>
+
+    <!-- ================= COLUMNA DERECHA ================= -->
+    <aside class="panel panel-right" id="panelRight">
+
+      <section class="block">
+        <div class="block-head">
+          <h2 class="block-title" data-i18n="palette.title">Paleta extraída</h2>
+          <span class="tag mono" id="paletteMeta"></span>
+        </div>
+        <div class="swatch-list" id="paletteList"></div>
+        <div class="empty-mini" id="paletteEmpty">
+          <p data-i18n="palette.empty">Selecciona un área de la imagen y pulsa Extraer paleta.</p>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="basics.title">Colores básicos detectados</h2>
+        <div class="basics" id="basicsList"></div>
+        <div class="empty-mini" id="basicsEmpty">
+          <p data-i18n="basics.empty">Aquí verás las familias de color presentes en la selección.</p>
+        </div>
+      </section>
+
+      <section class="block block-schemes">
+        <div class="block-head">
+          <h2 class="block-title" data-i18n="harm.title">Armonías</h2>
+          <span class="tag tag-base" id="baseTag" hidden></span>
+        </div>
+        <p class="hint hint-top" id="schemeExportHint" data-i18n="harm.exportHint">Marca las que quieras en la hoja. La paleta y los colores básicos van siempre.</p>
+        <div class="schemes" id="schemeList"></div>
+        <div class="empty-mini" id="schemeEmpty">
+          <p data-i18n="harm.empty">Elige un color de la paleta para ver sus armonías.</p>
+        </div>
+        <p class="hint" id="schemeHint" hidden data-i18n="harm.hint">Calculadas sobre la rueda artística de 12 tonos: rojo, amarillo y azul como primarios.</p>
+      </section>
+
+    </aside>
+
+  </main>
+
+  <!-- ============================================================
+       GAMMA
+       ============================================================ -->
+  <main class="view gamma" id="viewGamma" hidden>
+
+    <aside class="panel panel-left">
+      <section class="block" id="gRuleBlock">
+        <h2 class="block-title" data-i18n="g.rule">Regla de armonía</h2>
+        <div class="rule-list" id="gRules"></div>
+      </section>
+
+      <section class="block" id="gAdjustBlock">
+        <h2 class="block-title" data-i18n="g.adjust">Ajustes</h2>
+        <div class="field">
+          <div class="field-head">
+            <label for="gLight" data-i18n="g.light">Brillo</label>
+            <span class="mono" id="gLightVal">55</span>
+          </div>
+          <input type="range" id="gLight" min="6" max="94" step="1" value="55">
+        </div>
+        <div class="field">
+          <div class="field-head">
+            <label for="gSat" data-i18n="g.sat">Saturación</label>
+            <span class="mono" id="gSatVal">64</span>
+          </div>
+          <input type="range" id="gSat" min="0" max="100" step="1" value="64">
+        </div>
+        <p class="hint" data-i18n="g.hint">Arrastra los puntos de la rueda para mover cada color. El punto central manda: al moverlo se rehace toda la armonía.</p>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="g.codes">Formato de códigos</h2>
+        <div class="seg seg-modes" id="gModes" role="group" aria-label="Formato de códigos">
+          <button data-mode="hex" class="is-active">HEX</button>
+          <button data-mode="rgb">RGB</button>
+          <button data-mode="hsl">HSL</button>
+          <button data-mode="hsv">HSV</button>
+          <button data-mode="cmyk">CMYK</button>
+          <button data-mode="lab">LAB</button>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="g.access">Accesibilidad</h2>
+        <div class="field">
+          <div class="field-head"><label for="gBlind" data-i18n="g.blind">Visión del color</label></div>
+          <select id="gBlind" class="select">
+            <option value="none" data-i18n="g.blindNone">Normal</option>
+            <option value="protan" data-i18n="g.blindProtan">Protanopía</option>
+            <option value="deutan" data-i18n="g.blindDeutan">Deuteranopía</option>
+            <option value="tritan" data-i18n="g.blindTritan">Tritanopía</option>
+          </select>
+        </div>
+        <p class="hint" data-i18n="g.blindHint">La simulación se aplica a las muestras y a la previsualización.</p>
+      </section>
+    </aside>
+
+    <section class="gamma-stage">
+      <div class="g-tabs" id="gTabs" role="tablist">
+        <button class="g-tab" data-tab="image" role="tab" data-i18n="g.tabImage">Imagen</button>
+        <button class="g-tab is-active" data-tab="wheel" role="tab" data-i18n="g.tabWheel">Rueda de color</button>
+      </div>
+
+      <div class="g-panes">
+        <div class="g-pane" id="gPaneImage" hidden>
+          <div class="g-image-wrap" id="gImageWrap">
+            <canvas id="gImageCanvas"></canvas>
+            <div class="g-zoom" id="gZoom" hidden>
+              <button type="button" id="gZoomOut" data-i18n-title="g.zoomOut" data-i18n-aria="g.zoomOut">−</button>
+              <span class="mono" id="gZoomLevel">100%</span>
+              <button type="button" id="gZoomIn" data-i18n-title="g.zoomIn" data-i18n-aria="g.zoomIn">+</button>
+              <button type="button" id="gZoomFit" data-i18n="g.zoomFit">Ajustar</button>
+            </div>
+            <div class="g-image-empty" id="gImageEmpty">
+              <svg viewBox="0 0 64 64" class="empty-icon" aria-hidden="true">
+                <rect x="8" y="14" width="48" height="38" rx="5"/>
+                <circle cx="23" cy="27" r="4.5"/>
+                <path d="M12 46l13-13 9 9 7-6 11 10"/>
+              </svg>
+              <p data-i18n="g.imageEmpty">Arrastra una imagen aquí</p>
+              <button class="btn btn-primary" id="gImagePick" data-i18n="g.imagePick">Elegir imagen</button>
+            </div>
+          </div>
+          <div class="g-image-actions">
+            <div class="g-k" data-i18n-title="g.colors">
+              <button type="button" id="gKDown" aria-label="−">−</button>
+              <span class="mono" id="gKVal">5</span>
+              <button type="button" id="gKUp" aria-label="+">+</button>
+            </div>
+            <button class="btn btn-blue" id="gImageExtract" disabled data-i18n="g.imageExtract">Extraer colores</button>
+            <span class="tag" id="gImageName"></span>
+          </div>
+          <p class="hint" data-i18n="g.imageHint">Clic para tomar un color · rueda para acercar · arrastra para mover.</p>
+        </div>
+
+        <div class="g-pane" id="gPaneWheel" hidden>
+          <div class="wheel-box">
+            <canvas id="gWheel" aria-label="Rueda de color"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-palette" id="gPalette"></div>
+      <p class="hint g-tip" data-i18n="g.tip">Clic en una muestra para verla en detalle. Arrastra los puntos de la rueda para ajustar.</p>
+    </section>
+
+    <aside class="panel panel-right">
+      <section class="block">
+        <div class="block-head">
+          <h2 class="block-title" data-i18n="g.selected">Color seleccionado</h2>
+          <span class="tag" id="gRuleTag"></span>
+        </div>
+        <div class="g-detail" id="gDetail"></div>
+      </section>
+
+      <section class="block">
+        <h2 class="block-title" data-i18n="g.exportTitle">Exportar paleta</h2>
+        <div class="g-actions">
+          <button class="btn btn-blue" id="gExport">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5"/><path d="M5 16.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1.5"/></svg>
+            <span data-i18n="g.exportPng">Hoja PNG</span>
+          </button>
+          <button class="btn btn-soft" id="gCopyCss" data-i18n="g.copyCss">Copiar CSS</button>
+          <button class="btn btn-soft" id="gCopyHex" data-i18n="g.copyHex">Copiar HEX</button>
+          <button class="btn btn-soft" id="gDownloadCss" data-i18n="g.dlCss">Descargar CSS</button>
+          <button class="btn btn-soft" id="gDownloadJson" data-i18n="g.dlJson">Descargar JSON</button>
+        </div>
+        <p class="hint" data-i18n="g.exportHint">La hoja PNG incluye la rueda, las muestras y todos los códigos.</p>
+      </section>
+    </aside>
+
+    <input type="file" id="gFileInput" accept="image/*" hidden>
+  </main></div>
+
+<!-- ================= MODAL AYUDA ================= -->
+<div class="modal" id="helpModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <header class="modal-head">
+      <h2 id="helpTitle" data-i18n="help.title">Cómo usar ColorCat</h2>
+      <button class="icon-btn" id="btnCloseHelp" data-i18n-aria="ui.close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <div class="help-cols">
+        <div>
+          <h3 data-i18n="help.workflow">Espectro · flujo de trabajo</h3>
+          <ol class="steps">
+            <li data-i18n-html="help.step1"><strong>Abre una imagen</strong> (arrastrar, pegar o elegir archivo).</li>
+            <li data-i18n-html="help.step2"><strong>Selecciona el área</strong> con rectángulo, lazo, varita mágica o pincel.</li>
+            <li data-i18n-html="help.step3"><strong>Corrige la selección</strong> con el pincel y el borrador (o Alt para restar).</li>
+            <li data-i18n-html="help.step4"><strong>Extrae la paleta</strong> y elige el color base.</li>
+            <li data-i18n-html="help.step5"><strong>Marca tus armonías</strong> y exporta la hoja de estilos en PNG.</li>
+          </ol>
+
+          <h3 data-i18n="help.selection">Selección</h3>
+          <ul class="keys">
+            <li data-i18n-html="help.k.pan"><kbd>Espacio</kbd> + arrastrar <span>mover la imagen</span></li>
+            <li data-i18n-html="help.k.zoom"><kbd>Rueda</kbd> <span>zoom en el cursor</span></li>
+            <li data-i18n-html="help.k.alt"><kbd>Alt</kbd> + arrastrar <span>restar de la selección</span></li>
+            <li data-i18n-html="help.k.undo"><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> <span>deshacer / rehacer</span></li>
+            <li data-i18n-html="help.k.del"><kbd>Supr</kbd> <span>limpiar selección</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 data-i18n="help.tools">Herramientas</h3>
+          <ul class="keys">
+            <li data-i18n-html="help.k.rect"><kbd>R</kbd> <span>rectángulo</span></li>
+            <li data-i18n-html="help.k.lasso"><kbd>L</kbd> <span>lazo libre</span></li>
+            <li data-i18n-html="help.k.wand"><kbd>W</kbd> <span>varita mágica</span></li>
+            <li data-i18n-html="help.k.brush"><kbd>B</kbd> <span>pincel (suma)</span></li>
+            <li data-i18n-html="help.k.eraser"><kbd>E</kbd> <span>borrador (resta)</span></li>
+            <li data-i18n-html="help.k.picker"><kbd>I</kbd> <span>cuentagotas</span></li>
+            <li data-i18n-html="help.k.brushSize"><kbd>[</kbd> <kbd>]</kbd> <span>grosor del pincel</span></li>
+          </ul>
+
+          <h3 data-i18n="help.gamma">Gamma</h3>
+          <p class="modal-note" data-i18n="help.gammaNote">Elige una regla de armonía, mueve la rueda y ajusta brillo y saturación. Cambia el formato de los códigos y comprueba la accesibilidad antes de exportar.</p>
+
+          <h3 data-i18n="help.general">Atajos generales</h3>
+          <ul class="keys">
+            <li data-i18n-html="help.k.open"><kbd>Ctrl</kbd>+<kbd>O</kbd> <span>abrir imagen</span></li>
+            <li data-i18n-html="help.k.paste"><kbd>Ctrl</kbd>+<kbd>V</kbd> <span>pegar imagen</span></li>
+            <li data-i18n-html="help.k.extract"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> <span>extraer paleta</span></li>
+            <li data-i18n-html="help.k.sheet"><kbd>Ctrl</kbd>+<kbd>S</kbd> <span>exportar hoja</span></li>
+            <li data-i18n-html="help.k.fit"><kbd>0</kbd> / <kbd>1</kbd> <span>ajustar / tamaño real</span></li>
+            <li data-i18n-html="help.k.menu"><kbd>Esc</kbd> <span>volver al menú</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="image/*" hidden>
+
+<noscript><p style="padding:2rem;font-family:sans-serif">ColorCat necesita JavaScript activado.</p></noscript>
+
+<script src="js/i18n.js?v=5"></script>
+<script src="js/color.js?v=5"></script>
+<script src="js/palette.js?v=5"></script>
+<script src="js/export.js?v=5"></script>
+<script src="js/gamma.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
+</body>
+</html>
